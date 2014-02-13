@@ -4,7 +4,6 @@
 #include <string>
 
 /// misc functions for parsing sql files.
-
 namespace ralab{
   namespace base{
     namespace misc{

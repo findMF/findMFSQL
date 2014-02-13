@@ -8,6 +8,7 @@ namespace ralab{
     namespace dto{
       //dto to tansfer instrument information.
 
+      /// transfers sample properties such as
       struct SampleDescript{
         std::string  name;
         std::string description;

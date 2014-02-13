@@ -7,14 +7,14 @@ include_directories(${inc})
 
 message(STATUS ">>>>>>> ${Boost_LIBRARIES} >>>>")
 
-ADD_EXECUTABLE(sqlsocitest sqlsocitest.cpp )
-TARGET_LINK_LIBRARIES(sqlsocitest ${Boost_LIBRARIES} ${QT_LIBRARIES} utilslib)
+ADD_EXECUTABLE(samplewriteTest samplewriteTest.cpp )
+TARGET_LINK_LIBRARIES(samplewriteTest ${Boost_LIBRARIES} ${QT_LIBRARIES} utilslib)
 
 ENABLE_TESTING()
 
-add_test(NAME sqlsocitest
+add_test(NAME samplewriteTest
 WORKING_DIRECTORY ${BinOut}
-COMMAND ${BinOut}/sqlsocitest )
-set_tests_properties(sqlsocitest PROPERTIES ENVIRONMENT "${LD_VARNAME}=${LD_PATH}")
+COMMAND ${BinOut}/samplewriteTest )
+set_tests_properties(samplewriteTest PROPERTIES ENVIRONMENT "${LD_VARNAME}=${LD_PATH}")
 
 

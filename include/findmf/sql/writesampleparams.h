@@ -16,6 +16,8 @@ namespace ralab
   {
     namespace fileio
     {
+
+
       /// writing sample information
       struct WriteSampleParams{
         QSqlDatabase sql_; //!< sql database
@@ -58,7 +60,6 @@ namespace ralab
           iQuery_.bindValue(":name",sample.name.c_str());
           iQuery_.bindValue(":file",sample.file.c_str());
           iQuery_.bindValue(":description",sample.description.c_str());
-          //std::cout << rowid << lastid << std::endl;
 
           if(iQuery_.exec()){
             int cdID = iQuery_.lastInsertId().toInt();
@@ -69,9 +70,8 @@ namespace ralab
           return -1;
         }
 
-      public:
-
-        /// @return
+        /// store instrument information
+        /// @return last inserted id
         int insertInstrumentInfo(int sampleid, ralab::findmf::dto::Instrument & inst){
           sql_.transaction();
           std::string p1 = "insert into instrumentinfo(id,manufacturer,model,ionisation,analyser,detector)";
@@ -92,10 +92,11 @@ namespace ralab
 
         }
 
-        //
+        /// store processing parameters
+        /// @return last insterted id
         int insertProcessParameters(int sampleid, ralab::findmf::dto::Params & params){
           std::string p1 = "insert into softwareparam(id, resolution,nrthreads,mzpixelwidth,";
-          p1+= "rtpixelwidth,scalemz,scalert,minintensity,minmass,maxmass,rt2sum)";
+          p1 += "rtpixelwidth,scalemz,scalert,minintensity,minmass,maxmass,rt2sum)";
           p1 += " values(:id, :resolution,:nrthreads,:mzpixelwidth,:rtpixelwidth,:scalemz,:scalert,";
           p1 +=  ":minintensity,:minmass,:maxmass,:rt2sum)";
           iQuery_.prepare(p1.c_str());
@@ -122,7 +123,10 @@ namespace ralab
       }
 
       public:
-        /// @ return sample id
+
+        /// write sample description
+        /// consists of sample description, instrument and processing parameters description
+        /// @return sample id
         uint32_t write(
             ralab::findmf::dto::SampleDescript & sampledescription,
             ralab::findmf::dto::Instrument & instrument,
