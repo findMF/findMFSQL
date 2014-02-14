@@ -21,26 +21,36 @@ namespace ralab
 
         QSqlDatabase sql_;
 
-        void open(std::string fileloc){
-          sql_ = QSqlDatabase::addDatabase("QSQLITE");
-          QString dbloc(fileloc.c_str());
-          sql_.setDatabaseName(dbloc);
-          if (!sql_.open())
-            {
-              throw std::runtime_error("can't open db");
-            }
-        }
+      private:
+        void open(const std::string & fileloc){
 
-
-        CreateTables(const std::string & fileloc, const std::string & schemafile):sql_()
-        {
-          //using namespace soci;
-          bool eschem = boost::filesystem3::exists( schemafile );
+          //check if file location is valid
           boost::filesystem3::path path = boost::filesystem3::path(fileloc).parent_path();
           bool fpath = boost::filesystem3::exists( boost::filesystem3::path(fileloc).parent_path()) || path.empty();
 
-          if(eschem && fpath)
+          if(fpath){
+            sql_ = QSqlDatabase::addDatabase("QSQLITE");
+            QString dbloc(fileloc.c_str());
+            sql_.setDatabaseName(dbloc);
+            if (!sql_.open())
+            {
+              throw std::runtime_error("can't open db");
+            }
+          }
+        }
+
+      public:
+        CreateTables(const std::string & fileloc, const std::string & schemafile):sql_()
+        {
+
+          //open/create the database the database
+          open(fileloc);
+          //check if schema file exists;
+          bool eschem = boost::filesystem3::exists( schemafile );
+
+          if(eschem )
           {
+
             std::vector<std::string> creatstatements = ralab::findmf::utils::sqlparse(schemafile);
 
 

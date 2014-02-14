@@ -22,7 +22,7 @@ namespace ralab
       struct WriteSampleParams{
         QSqlDatabase sql_; //!< sql database
         std::string fileloc_; //!< sql file location
-        QSqlQuery iQuery_; //!< database
+        //QSqlQuery iQuery_; //!< database
 
       private:
         /// open the database
@@ -36,25 +36,26 @@ namespace ralab
           }
         }
       public:
-        WriteSampleParams(const std::string & fileloc):fileloc_(fileloc){}
+        WriteSampleParams(const std::string & fileloc):fileloc_(fileloc){
+          openDB();
+        }
 
         ~WriteSampleParams(){
           sql_.close();
         }
 
-        void commit(){
 
-        }
 
       private:
 
         /// @return sample id
-        uint32_t insertSample(ralab::findmf::dto::SampleDescript & sample)
+        int insertSample(ralab::findmf::dto::SampleDescript & sample)
         {
           sql_.transaction();
           //using namespace soci;
           std::string p1 =  "insert into sample(name, file, description )";
           p1 +=  " values(:name,:file, :description)";
+          QSqlQuery iQuery_(sql_);
           QString queryString(p1.c_str());
           iQuery_.prepare(queryString);
           iQuery_.bindValue(":name",sample.name.c_str());
@@ -65,6 +66,9 @@ namespace ralab
             int cdID = iQuery_.lastInsertId().toInt();
             sql_.commit();
             return cdID;
+          }else{
+            QSqlError err = iQuery_.lastError();
+            std::cerr <<  "can't insert into sample: " << err.text().toStdString() <<std::endl;
           }
           sql_.rollback();
           return -1;
@@ -76,6 +80,7 @@ namespace ralab
           sql_.transaction();
           std::string p1 = "insert into instrumentinfo(id,manufacturer,model,ionisation,analyser,detector)";
           p1 += " values(:id, :manufacturer, :model, :ionisation, :analyser, :detector)";
+          QSqlQuery iQuery_(sql_);
           iQuery_.prepare(p1.c_str());
           iQuery_.bindValue(":id",sampleid);
           iQuery_.bindValue(":manufacturer",inst.manufacturer.c_str());
@@ -86,6 +91,9 @@ namespace ralab
             int id = iQuery_.lastInsertId().toInt();
             sql_.commit();
             return id;
+          }else{
+            QSqlError err = iQuery_.lastError();
+            std::cerr <<  "can't insert into instrumentinfo: " << err.text().toStdString() <<std::endl;
           }
           sql_.rollback();
           return -1;
@@ -99,6 +107,7 @@ namespace ralab
           p1 += "rtpixelwidth,scalemz,scalert,minintensity,minmass,maxmass,rt2sum)";
           p1 += " values(:id, :resolution,:nrthreads,:mzpixelwidth,:rtpixelwidth,:scalemz,:scalert,";
           p1 +=  ":minintensity,:minmass,:maxmass,:rt2sum)";
+          QSqlQuery iQuery_(sql_);
           iQuery_.prepare(p1.c_str());
 
           iQuery_.bindValue(":id",sampleid);
@@ -117,6 +126,9 @@ namespace ralab
             int id = iQuery_.lastInsertId().toInt();
             sql_.commit();
             return id;
+          }else{
+            QSqlError err = iQuery_.lastError();
+            std::cerr <<  "can't insert into softwareparam: " << err.text().toStdString() <<std::endl;
           }
           sql_.rollback();
           return -1;

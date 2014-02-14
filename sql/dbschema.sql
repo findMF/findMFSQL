@@ -55,7 +55,7 @@ FOREIGN KEY(id) REFERENCES sample(id)
 drop table if exists mapinfo;
 CREATE TABLE mapinfo(
 id integer primary key,  -- id of map
-sampleid int not null unique, -- sample id
+sampleid int not null, -- sample id // many maps per sample
 scancount int not null, --  -- number of spectra in map
 mslevel int not null,  --  -- ms level of map
 mzminext real,  -- min extraction mass
@@ -91,28 +91,27 @@ FOREIGN KEY(id) REFERENCES mapinfo(id)
 -- );
 
 -- not used
--- drop table if exists isofeatureboundingbox;
--- CREATE TABLE isofeatureboundingbox USING rtree(
--- id integer primary key,
--- minmzext real,  --  id in the current map
--- maxmzext real,
--- minrt real, -- id
--- maxrt real,
--- minmz real,
--- maxmz real
--- );
-
 drop table if exists isofeatureboundingbox;
-CREATE VIRTUAL TABLE isofeatureboundingbox USING rtree(
-id,
-minmzext,  --  id in the current map
-maxmzext,
-minrt, -- id
-maxrt,
-minmz,
-maxmz
+CREATE TABLE isofeatureboundingbox USING rtree(
+id integer primary key,
+minmzext real,  --  id in the current map
+maxmzext real,
+minrt int, -- min RT pixel location
+maxrt int, --
+minmz int, -- start RT pixel location
+maxmz int
 );
 
+-- drop table if exists isofeatureboundingbox;
+-- CREATE VIRTUAL TABLE isofeatureboundingbox USING rtree(
+-- id,
+-- minmzext,  --  id in the current map
+-- maxmzext,
+-- minrt, -- id
+-- maxrt,
+-- minmz,
+-- maxmz
+-- );
 
 -- feature statistics table
 drop table if exists isotopefeatures;
@@ -120,12 +119,12 @@ CREATE TABLE isotopefeatures (
 id integer primary key,  -- id in table
 idmap int not null,  --  id in the current map # todo check if needed
 idmapinfo int not null, --  id of the map - links to map info
-mzcom real,  -- com - center of mass
+mzcom real,  -- com - center of mass (pixel)
 rtcom real,
 mz real,  --  picked mass
 rt real ,
-mzmaxloc real,  --  mz max location
-rtmaxloc real,
+mzmaxloc int,  --  location of peak maximum (pixel)
+rtmaxloc int,
 mzsd real, --  sd of peak
 rtsd real,
 mzskew real, --  skewness
