@@ -25,8 +25,8 @@ namespace ralab
         void open(const std::string & fileloc){
 
           //check if file location is valid
-          boost::filesystem3::path path = boost::filesystem3::path(fileloc).parent_path();
-          bool fpath = boost::filesystem3::exists( boost::filesystem3::path(fileloc).parent_path()) || path.empty();
+          boost::filesystem::path path = boost::filesystem::path(fileloc).parent_path();
+          bool fpath = boost::filesystem::exists( boost::filesystem::path(fileloc).parent_path()) || path.empty();
 
           if(fpath){
             sql_ = QSqlDatabase::addDatabase("QSQLITE");
@@ -46,14 +46,12 @@ namespace ralab
           //open/create the database the database
           open(fileloc);
           //check if schema file exists;
-          bool eschem = boost::filesystem3::exists( schemafile );
+          bool eschem = boost::filesystem::exists( schemafile );
 
           if(eschem )
           {
 
             std::vector<std::string> creatstatements = ralab::findmf::utils::sqlparse(schemafile);
-
-
             for(int i = 0 ; i < creatstatements.size(); ++i )
             {
               try{

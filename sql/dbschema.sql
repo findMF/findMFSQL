@@ -91,16 +91,16 @@ FOREIGN KEY(id) REFERENCES mapinfo(id)
 -- );
 
 -- not used
-drop table if exists isofeatureboundingbox;
-CREATE TABLE isofeatureboundingbox USING rtree(
-id integer primary key,
-minmzext real,  --  id in the current map
-maxmzext real,
-minrt int, -- min RT pixel location
-maxrt int, --
-minmz int, -- start RT pixel location
-maxmz int
-);
+-- drop table if exists isofeatureboundingbox;
+-- CREATE TABLE isofeatureboundingbox USING rtree(
+-- id integer primary key,
+-- minmzext real,  --  id in the current map
+-- maxmzext real,
+-- minrt int, -- min RT pixel location
+-- maxrt int, --
+-- minmz int, -- start RT pixel location
+-- maxmz int
+-- );
 
 -- drop table if exists isofeatureboundingbox;
 -- CREATE VIRTUAL TABLE isofeatureboundingbox USING rtree(

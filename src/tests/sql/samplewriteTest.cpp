@@ -13,8 +13,6 @@
 //#include <QtSql>
 
 
-
-
 void testCreateDB()
 {
   std::string testfile("../sql/dbschema.sql");
